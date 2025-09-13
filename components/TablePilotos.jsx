@@ -17,7 +17,8 @@ import {
   TextField,
 } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+import ToggleOnIcon from '@mui/icons-material/ToggleOn';
+import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 
 export default function TablaPilotos() {
   const [Pilotos, setPilotos] = useState([]);
@@ -49,6 +50,15 @@ export default function TablaPilotos() {
       p.Nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
       p.Placa.toLowerCase().includes(busqueda.toLowerCase())
   );
+
+  function toggleEstado(id) {
+    const pilotos = JSON.parse(localStorage.getItem("pilotos")) || [];
+    const actualizados = pilotos.map((p) =>
+      p.id === id ? { ...p, estado: !p.estado } : p
+    );
+    localStorage.setItem("pilotos", JSON.stringify(actualizados));
+    window.dispatchEvent(new Event("storageUpdated"));
+  }
 
   return (
     <Card
@@ -109,8 +119,8 @@ export default function TablaPilotos() {
                   <TableCell>{p.Placa}</TableCell>
                   <TableCell>
                     <Chip
-                      label={p.estado ? "Activo" : "Inactivo"}
-                      color="success"
+                      label={p.estado ? "ACTIVO" : "INACTIVO"}
+                      color={p.estado ? "success" : "error"}
                       size="small"
                       sx={{ fontWeight: "bold", color: "#fff" }}
                     />
@@ -120,16 +130,19 @@ export default function TablaPilotos() {
                     <Button
                       variant="outlined"
                       size="small"
-                      startIcon={<VisibilityOffOutlinedIcon />}
+                      onClick={() => toggleEstado(p.id)}
+                      startIcon={p.estado ? <ToggleOnIcon /> : <ToggleOffIcon />}
                       sx={{
-                        textTransform: "none",
+                        textTransform: "uppercase",
                         mr: 1,
-                        borderColor: "#d1d5db",
-                        color: "#374151",
-                        "&:hover": { borderColor: "#9ca3af" },
+                        bgcolor: p.estado ? "#10b981" : "#ef4444", // verde si activo, rojo si inactivo
+                        color: "#fff",
+                        "&:hover": {
+                          bgcolor: p.estado ? "#059669" : "#dc2626", // hover más oscuro
+                        },
                       }}
                     >
-                      Desactivar
+                      {p.estado ? "Inhabilitar" : "Habilitar"}
                     </Button>
                     <IconButton
                       color="error"

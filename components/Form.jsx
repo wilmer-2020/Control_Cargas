@@ -15,9 +15,9 @@ export default function FormularioMovimiento() {
   const [Pilotos, setPilotos] = useState([]);
 
   const [Movimientos, setMovimientos] = useState(() => {
-  const guardados = localStorage.getItem("movimientos");
-  return guardados ? JSON.parse(guardados) : [];
-});
+    const guardados = localStorage.getItem("movimientos");
+    return guardados ? JSON.parse(guardados) : [];
+  });
 
   const [Data, setData] = useState({
     piloto: "",
@@ -44,21 +44,21 @@ export default function FormularioMovimiento() {
   };
 
   const handlesubmit = (e) => {
-  e.preventDefault();
-  console.log(Data);
+    e.preventDefault();
+    console.log(Data);
 
-  const nuevosMovimientos = [...Movimientos, Data];
-  setMovimientos(nuevosMovimientos);
-  localStorage.setItem("movimientos", JSON.stringify(nuevosMovimientos));
-  window.dispatchEvent(new Event("storageUpdated"));
+    const nuevosMovimientos = [...Movimientos, Data];
+    setMovimientos(nuevosMovimientos);
+    localStorage.setItem("movimientos", JSON.stringify(nuevosMovimientos));
+    window.dispatchEvent(new Event("storageUpdated"));
 
-  setData({
-    piloto: "",
-    tipoMovimiento: "",
-    fecha: new Date().toLocaleString(),
-    placaContenedor: "",
-  });
-};
+    setData({
+      piloto: "",
+      tipoMovimiento: "",
+      fecha: new Date().toLocaleString(),
+      placaContenedor: "",
+    });
+  };
 
   useEffect(() => {
     cargarPilotos();
@@ -99,7 +99,7 @@ export default function FormularioMovimiento() {
           margin="normal"
           onChange={hanleChange}
         >
-          {Pilotos.map((option, index) => (
+          {Pilotos.filter((p) => p.estado === true).map((option, index) => (
             <MenuItem key={index} value={option.Nombre}>
               {option.Nombre}
             </MenuItem>
