@@ -103,7 +103,7 @@ export default function TablaHistorial() {
         {/* Input de búsqueda + botón exportar */}
         <Box display="flex" gap={2} mb={2}>
           <TextField
-            fullWidth
+            size="medium"
             label="Buscar por piloto o unidad"
             variant="outlined"
             value={busqueda}
