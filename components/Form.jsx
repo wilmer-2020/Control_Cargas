@@ -27,7 +27,7 @@ export default function FormularioMovimiento() {
   });
 
   const tipos = [
-    { label: "Convencional", value: "convencional" },
+    { label: "Circuito", value: "Circuito" },
     { label: "Naviero", value: "naviero" },
   ];
 

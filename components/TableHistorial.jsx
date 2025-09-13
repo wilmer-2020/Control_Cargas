@@ -14,6 +14,8 @@ import {
   Box,
 } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 export default function TablaHistorial() {
   const [movimientos, setMovimientos] = useState(
@@ -55,6 +57,25 @@ export default function TablaHistorial() {
     return piloto ? piloto.Placa : "N/A";
   };
 
+  // 🚀 Función para exportar a Excel
+  const exportarExcel = () => {
+    const datosExportar = movimientosFiltrados.map((m) => ({
+      Piloto: m.piloto,
+      Cabezal: obtenerCabezal(m.piloto),
+      "Unidad Movida": m.placaContenedor,
+      Tipo: m.tipoMovimiento,
+      Fecha: m.fecha,
+    }));
+
+    const hoja = XLSX.utils.json_to_sheet(datosExportar);
+    const libro = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(libro, hoja, "Movimientos");
+
+    const excelBuffer = XLSX.write(libro, { bookType: "xlsx", type: "array" });
+    const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
+    saveAs(blob, "movimientos.xlsx");
+  };
+
   return (
     <Card
       sx={{
@@ -79,8 +100,8 @@ export default function TablaHistorial() {
           Gestione los movimientos realizados por los pilotos
         </Typography>
 
-        {/* Input de búsqueda */}
-        <Box mb={2}>
+        {/* Input de búsqueda + botón exportar */}
+        <Box display="flex" gap={2} mb={2}>
           <TextField
             fullWidth
             label="Buscar por piloto o unidad"
@@ -88,6 +109,13 @@ export default function TablaHistorial() {
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
           />
+          <Button
+            variant="contained"
+            color="success"
+            onClick={exportarExcel}
+          >
+            Exportar a Excel
+          </Button>
         </Box>
 
         {/* Tabla */}
