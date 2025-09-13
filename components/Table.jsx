@@ -10,7 +10,7 @@ import {
 import PersonIcon from "@mui/icons-material/Person";
 
 const getChipColor = (estado) => {
-  return estado === "Activo" ? "success" : "warning";
+  return estado ? "success" : "error"; // Verde si activo, rojo si inactivo
 };
 
 export default function MovimientosPorPiloto() {
@@ -23,7 +23,6 @@ export default function MovimientosPorPiloto() {
     const movimientosGuardados =
       JSON.parse(localStorage.getItem("movimientos")) || [];
 
-  
     const resumen = pilotosGuardados.map((p) => {
       const movsPiloto = movimientosGuardados.filter(
         (m) => m.piloto === p.Nombre
@@ -39,7 +38,7 @@ export default function MovimientosPorPiloto() {
       return {
         nombre: p.Nombre,
         codigo: p.Placa || "N/A",
-        estado: p.Estado || "Activo",
+        estado: p.estado ?? true, // usa la propiedad estado (boolean)
         total: convencional + naviero,
         convencional,
         naviero,
@@ -115,7 +114,7 @@ export default function MovimientosPorPiloto() {
               >
                 <Grid item>
                   <Chip
-                    label={p.estado}
+                    label={p.estado ? "Activo" : "Inactivo"}
                     color={getChipColor(p.estado)}
                     size="small"
                     sx={{ fontWeight: "bold", color: "#fff" }}
