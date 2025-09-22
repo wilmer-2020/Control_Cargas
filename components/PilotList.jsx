@@ -21,6 +21,7 @@ const PilotList = () => {
         <Grid item xs={12} sm={6} md={4} key={exp.idPiloto}>
           <PilotCard
             nombre={exp.nombre}
+            unidad={exp.placa}
             idPiloto={exp.idPiloto} 
             ultimaDispensa={exp.ultimaDispensa}
             diasRestantes={exp.diasRestantes}

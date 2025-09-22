@@ -16,7 +16,7 @@ const CardContainer = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(3),
 }));
 
-const PilotCard = ({nombre,idPiloto,ultimaDispensa,diasRestantes,dispensas = [],onUpdateDispensas = () => {},}) => {
+const PilotCard = ({nombre,idPiloto,ultimaDispensa,diasRestantes,unidad,dispensas = [],onUpdateDispensas = () => {},}) => {
 
   // Estado calculado a partir de diasRestantes
   const isPendiente = diasRestantes > 0; // true = no puede dispensar
@@ -35,7 +35,7 @@ const PilotCard = ({nombre,idPiloto,ultimaDispensa,diasRestantes,dispensas = [],
             {nombre}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            ID de Piloto: {idPiloto}
+            PLACA UNIDAD: {unidad}
           </Typography>
         </Box>
       </Box>
