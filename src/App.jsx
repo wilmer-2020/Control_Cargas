@@ -11,6 +11,9 @@ import FormularioPiloto from '../components/FormPiloto';
 import TablaPilotos from '../components/TablePilotos';
 import TablaHistorial from '../components/TableHistorial';
 
+import ModalExpediente from '../components/ModalExpediente';
+import PilotList from '../components/PilotList';
+
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -55,6 +58,7 @@ function App() {
           <Tab label="INICIO" {...a11yProps(0)} />
           <Tab label="REGISTRO" {...a11yProps(1)} />
           <Tab label="HISTORIAL" {...a11yProps(2)} />
+          <Tab label="DISPENSAS" {...a11yProps(3)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
@@ -71,6 +75,10 @@ function App() {
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
        <TablaHistorial/>
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={3}>
+      <ModalExpediente/>
+        <PilotList/>
       </CustomTabPanel>
     </Box>
     </>

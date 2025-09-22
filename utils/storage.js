@@ -5,6 +5,5 @@ export const getData = (key) => {
 
 export const saveData = (key, value) => {
   localStorage.setItem(key, JSON.stringify(value));
-  // Dispara un evento personalizado para que otros componentes se actualicen
   window.dispatchEvent(new Event("storageUpdated"));
 };

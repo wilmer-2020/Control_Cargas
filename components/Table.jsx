@@ -28,8 +28,8 @@ export default function MovimientosPorPiloto() {
         (m) => m.piloto === p.Nombre
       );
 
-      const convencional = movsPiloto.filter(
-        (m) => m.tipoMovimiento === "convencional"
+      const Circuito = movsPiloto.filter(
+        (m) => m.tipoMovimiento === "Circuito"
       ).length;
       const naviero = movsPiloto.filter(
         (m) => m.tipoMovimiento === "naviero"
@@ -39,8 +39,8 @@ export default function MovimientosPorPiloto() {
         nombre: p.Nombre,
         codigo: p.Placa || "N/A",
         estado: p.estado ?? true, // usa la propiedad estado (boolean)
-        total: convencional + naviero,
-        convencional,
+        total: Circuito + naviero,
+        Circuito,
         naviero,
       };
     });
@@ -142,7 +142,7 @@ export default function MovimientosPorPiloto() {
                     textAlign="center"
                     sx={{ color: "#059669" }}
                   >
-                    {p.convencional}
+                    {p.Circuito}
                   </Typography>
                   <Typography
                     variant="caption"
@@ -150,7 +150,7 @@ export default function MovimientosPorPiloto() {
                     textAlign="center"
                     color="text.secondary"
                   >
-                    Convencional
+                    Circuito
                   </Typography>
                 </Grid>
                 <Grid item>

@@ -24,9 +24,7 @@ export default function TablaPilotos() {
   const [Pilotos, setPilotos] = useState([]);
   const [busqueda, setBusqueda] = useState("");
 
-  const cargarPilotos = () => {
-    setPilotos(getData("pilotos"));
-  };
+  const cargarPilotos = () => setPilotos(getData("pilotos"));
 
   function eliminarPiloto(id) {
     const pilotos = JSON.parse(localStorage.getItem("pilotos")) || [];
