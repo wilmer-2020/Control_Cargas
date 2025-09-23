@@ -1,9 +1,9 @@
-import React from 'react';
 import { styled } from '@mui/material/styles';
 import { Box, Typography, Avatar, Button } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
+import { removeData,saveDispensas } from '../utils/storage';
 
 const CardContainer = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -16,11 +16,24 @@ const CardContainer = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(3),
 }));
 
-const PilotCard = ({nombre,idPiloto,ultimaDispensa,diasRestantes,unidad,dispensas = [],onUpdateDispensas = () => {},}) => {
-
+const PilotCard = ({nombre,id,ultimaDispensa,diasRestantes,unidad}) => {
   // Estado calculado a partir de diasRestantes
   const isPendiente = diasRestantes > 0; // true = no puede dispensar
   const estadoTexto = isPendiente ? "Dispensado" : "Pendiente";
+
+  const handleDelete = () => {
+    removeData("expedientes",id)
+    window.location.reload();
+  }
+  const handleDispensar = () => {
+    if (isPendiente) return;
+    const nuevaDispensa = {
+      unidad,
+      fecha: new Date().toISOString(),
+    };
+    saveDispensas("expedientes",id, nuevaDispensa);
+  }
+
 
 
   return (
@@ -76,6 +89,7 @@ const PilotCard = ({nombre,idPiloto,ultimaDispensa,diasRestantes,unidad,dispensa
       <Button
         variant="contained"
         fullWidth
+        onClick={handleDispensar}
         disabled={isPendiente}
         startIcon={isPendiente ? <LockOutlinedIcon /> : <LocalGasStationIcon />}
         sx={{
@@ -91,6 +105,9 @@ const PilotCard = ({nombre,idPiloto,ultimaDispensa,diasRestantes,unidad,dispensa
     
       >
         {isPendiente ? "Bloqueado" : "Dispensar Piloto"}
+      </Button>
+      <Button variant='contained' color='error' fullWidth sx={{mt:2,borderRadius:"10px"}} onClick={handleDelete}>
+        ELIMINAR EXPEDIENTE
       </Button>
 
       {/* Nota cuando está bloqueado */}

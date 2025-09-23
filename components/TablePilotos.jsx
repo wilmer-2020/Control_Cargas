@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getData } from "../utils/storage";
+import { getData, removeData } from "../utils/storage";
 import {
   Card,
   CardContent,
@@ -26,12 +26,7 @@ export default function TablaPilotos() {
 
   const cargarPilotos = () => setPilotos(getData("pilotos"));
 
-  function eliminarPiloto(id) {
-    const pilotos = JSON.parse(localStorage.getItem("pilotos")) || [];
-    const pilotosActualizados = pilotos.filter((piloto) => piloto.id !== id);
-    localStorage.setItem("pilotos", JSON.stringify(pilotosActualizados));
-    cargarPilotos();
-  }
+  const handleDelete = (id) =>  removeData("pilotos", id); 
 
   useEffect(() => {
     cargarPilotos();
@@ -50,8 +45,7 @@ export default function TablaPilotos() {
   );
 
   function toggleEstado(id) {
-    const pilotos = JSON.parse(localStorage.getItem("pilotos")) || [];
-    const actualizados = pilotos.map((p) =>
+    const actualizados = Pilotos.map((p) =>
       p.id === id ? { ...p, estado: !p.estado } : p
     );
     localStorage.setItem("pilotos", JSON.stringify(actualizados));
@@ -145,7 +139,7 @@ export default function TablaPilotos() {
                     <IconButton
                       color="error"
                       size="small"
-                      onClick={() => eliminarPiloto(p.id)}
+                      onClick={() => handleDelete(p.id)}
                       sx={{
                         border: "1px solid #fca5a5",
                         bgcolor: "#fff",

@@ -7,8 +7,14 @@ const PilotList = () => {
   const [expedientes, setExpedientes] = useState([]);
   const cargarExpedientes = () => setExpedientes(getData("expedientes"));
 
+  const handleDeleteExpediente = (id) => {
+  setExpedientes(prev => prev.filter(e => e.id !== id)); // 🔹 sincroniza el estado
+};
+
+
   useEffect(() => {
     cargarExpedientes();
+
     window.addEventListener("storageUpdated", cargarExpedientes);
     return () => {
       window.removeEventListener("storageUpdated", cargarExpedientes);
@@ -19,16 +25,14 @@ const PilotList = () => {
     <Grid container spacing={3}>
       {expedientes.map((exp) => (
         <Grid item xs={12} sm={6} md={4} key={exp.idPiloto}>
-          <PilotCard
+        <PilotCard
             nombre={exp.nombre}
             unidad={exp.placa}
-            idPiloto={exp.idPiloto} 
+            id={exp.id} 
             ultimaDispensa={exp.ultimaDispensa}
             diasRestantes={exp.diasRestantes}
             dispensas={exp.dispensas}
-            onUpdateDispensas={(nuevasDispensas) =>
-              handleUpdateDispensas(exp.idPiloto, nuevasDispensas)
-            }
+            onDelete-={handleDeleteExpediente}
           />
         </Grid>
       ))}
