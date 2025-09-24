@@ -1,9 +1,9 @@
 import { styled } from '@mui/material/styles';
 import { Box, Typography, Avatar, Button } from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
-import { removeData,saveDispensas } from '../utils/storage';
+import { useState } from 'react';
+import Swal from 'sweetalert2';
 
 const CardContainer = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -16,106 +16,113 @@ const CardContainer = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(3),
 }));
 
-const PilotCard = ({nombre,id,ultimaDispensa,diasRestantes,unidad}) => {
-  // Estado calculado a partir de diasRestantes
-  const isPendiente = diasRestantes > 0; // true = no puede dispensar
-  const estadoTexto = isPendiente ? "Dispensado" : "Pendiente";
+const PilotCard = ({ nombre, id, ultimaDispensa, fechaSiguienteDispensa, unidad, onDelete }) => {
+  const [estado, setEstado] = useState(ultimaDispensa ? "Dispensado" : "Pendiente");
+  const [siguiente, setSiguiente] = useState(fechaSiguienteDispensa || null);
+
+  const formatFecha = (fecha) => fecha ? new Date(fecha).toLocaleString() : "-";
+
+  const handleDispensar = () => {
+    const ahora = new Date();
+
+    if (siguiente && ahora < new Date(siguiente)) {
+      Swal.fire({
+        icon: 'info',
+        title: 'Aún no le toca',
+        text: `La próxima dispensa es el ${formatFecha(siguiente)}`,
+      });
+      return;
+    }
+
+    // Calcular fecha siguiente dispensa
+    const nuevaFechaSiguiente = new Date();
+    nuevaFechaSiguiente.setDate(nuevaFechaSiguiente.getDate() + 6);
+
+    // Actualizar storage
+    const expedientes = JSON.parse(localStorage.getItem("expedientes")) || [];
+    const actualizado = expedientes.map(exp => {
+      if (exp.id === id) {
+        const nuevaDispensa = {
+          fecha: ahora.toISOString(),
+          unidad,
+        };
+        return {
+          ...exp,
+          ultimaDispensa: ahora.toISOString(),
+          fechaSiguienteDispensa: nuevaFechaSiguiente.toISOString(),
+          dispensas: [...(exp.dispensas || []), nuevaDispensa],
+        };
+      }
+      return exp;
+    });
+    localStorage.setItem("expedientes", JSON.stringify(actualizado));
+
+    // Actualizar estado local
+    setEstado("Dispensado");
+    setSiguiente(nuevaFechaSiguiente.toISOString());
+   
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Dispensado',
+      text: `Próxima dispensa: ${formatFecha(nuevaFechaSiguiente)}`,
+    });
+  };
 
   const handleDelete = () => {
-    removeData("expedientes",id)
-    window.location.reload();
-  }
-  const handleDispensar = () => {
-    if (isPendiente) return;
-    const nuevaDispensa = {
-      unidad,
-      fecha: new Date().toISOString(),
-    };
-    saveDispensas("expedientes",id, nuevaDispensa);
-  }
-
-
+    onDelete(id);
+  };
 
   return (
     <CardContainer>
-      {/* Header */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
         <Avatar sx={{ bgcolor: '#E0F2FF', color: '#1976D2' }}>
           <PersonOutlinedIcon />
         </Avatar>
         <Box sx={{ textAlign: 'left' }}>
-          <Typography variant="h5" component="h2" fontWeight="bold">
-            {nombre}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            PLACA UNIDAD: {unidad}
-          </Typography>
+          <Typography variant="h5" fontWeight="bold">{nombre}</Typography>
+          <Typography variant="body2" color="text.secondary">PLACA UNIDAD: {unidad}</Typography>
         </Box>
       </Box>
 
-      {/* Última dispensa */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1.5 }}>
-        <Typography variant="body1" color="#607d8b">
-          Última Dispensa
-        </Typography>
-        <Typography variant="body1" fontWeight="bold">
-         
-        </Typography>
-      </Box>
-      <Box sx={{ borderBottom: '1px solid', borderColor: 'grey.400', mb: 2 }} />
-
-      {/* Estado actual */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-        <Typography variant="body1" color="#607d8b">
-          Estado Actual
-        </Typography>
-        <Box
-          sx={{
-            bgcolor: isPendiente ? '#D4EDDA' : '#F8D7DA',
-            color: isPendiente ? '#28A745' : '#C82333',
-            px: 2,
-            py: 0.5,
-            borderRadius: 20,
-            fontWeight: 'bold',
-            fontSize: '0.875rem',
-            fontFamily: 'Roboto, sans-serif',
-          }}
-        >
-          {estadoTexto}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Typography variant="body1" color="#607d8b">Estado Actual</Typography>
+        <Box sx={{
+          bgcolor: estado === "Dispensado" ? '#D4EDDA' : '#F8D7DA',
+          color: estado === "Dispensado" ? '#28A745' : '#C82333',
+          px: 2, py: 0.5, borderRadius: 20, fontWeight: 'bold', fontSize: '0.875rem'
+        }}>
+          {estado}
         </Box>
       </Box>
 
-      {/* Botón */}
+      {siguiente && (
+        <Typography variant="body2" sx={{ mb: 2, color: '#ffc107' }}>
+          Próxima dispensa: {formatFecha(siguiente)}
+        </Typography>
+      )}
+
       <Button
         variant="contained"
         fullWidth
         onClick={handleDispensar}
-        disabled={isPendiente}
-        startIcon={isPendiente ? <LockOutlinedIcon /> : <LocalGasStationIcon />}
-        sx={{
-          py: 1,
-          textTransform: 'none',
-          borderRadius: 3,
-          bgcolor: isPendiente ? '#607d8b' : '#014d77ff',
-          color: '#fff',
-          '&:hover': {
-            bgcolor: isPendiente ? '#546e7a' : '#00365dff',
-          },
-        }}
-    
+        startIcon={<LocalGasStationIcon />}
+        sx={{ py: 1, textTransform: 'none', borderRadius: 3, bgcolor: '#014d77ff', color: '#fff' }}
       >
-        {isPendiente ? "Bloqueado" : "Dispensar Piloto"}
-      </Button>
-      <Button variant='contained' color='error' fullWidth sx={{mt:2,borderRadius:"10px"}} onClick={handleDelete}>
-        ELIMINAR EXPEDIENTE
+        Dispensar Piloto
       </Button>
 
-      {/* Nota cuando está bloqueado */}
-      {isPendiente && (
-        <Typography variant="body2" sx={{ mt: 2, color: '#ffc107' }}>
-          Debe esperar {diasRestantes} días para dispensar nuevamente.
-        </Typography>
-      )}
+
+
+      <Button
+        variant='contained'
+        color='error'
+        fullWidth
+        sx={{ mt: 2, borderRadius: "10px" }}
+        onClick={handleDelete}
+      >
+        ELIMINAR EXPEDIENTE
+      </Button>
     </CardContainer>
   );
 };

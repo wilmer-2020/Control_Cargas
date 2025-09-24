@@ -13,6 +13,7 @@ import TablaHistorial from '../components/TableHistorial';
 
 import ModalExpediente from '../components/ModalExpediente';
 import PilotList from '../components/PilotList';
+import HistorialDispensas from '../components/HistorialDispensas';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -59,6 +60,7 @@ function App() {
           <Tab label="REGISTRO" {...a11yProps(1)} />
           <Tab label="HISTORIAL" {...a11yProps(2)} />
           <Tab label="DISPENSAS" {...a11yProps(3)} />
+          <Tab label="HISTORIAL DISPENSAS" {...a11yProps(4)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
@@ -79,6 +81,9 @@ function App() {
       <CustomTabPanel value={value} index={3}>
       <ModalExpediente/>
         <PilotList/>
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={4}>
+       <HistorialDispensas/>
       </CustomTabPanel>
     </Box>
     </>

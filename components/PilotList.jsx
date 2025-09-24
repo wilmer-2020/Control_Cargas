@@ -1,38 +1,37 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Grid } from "@mui/material";
 import PilotCard from "./PilotCard";
-import { getData } from "../utils/storage";
-
+import { getData, removeData } from "../utils/storage";
 const PilotList = () => {
   const [expedientes, setExpedientes] = useState([]);
+
   const cargarExpedientes = () => setExpedientes(getData("expedientes"));
-
-  const handleDeleteExpediente = (id) => {
-  setExpedientes(prev => prev.filter(e => e.id !== id)); // 🔹 sincroniza el estado
-};
-
 
   useEffect(() => {
     cargarExpedientes();
-
     window.addEventListener("storageUpdated", cargarExpedientes);
     return () => {
       window.removeEventListener("storageUpdated", cargarExpedientes);
     };
   }, []);
 
+  const handleDeleteExpediente = (id) => {
+    removeData("expedientes", id);
+    window.location.reload();
+  };
+
   return (
     <Grid container spacing={3}>
       {expedientes.map((exp) => (
-        <Grid item xs={12} sm={6} md={4} key={exp.idPiloto}>
-        <PilotCard
+        <Grid item xs={12} sm={6} md={4} key={exp.id}>
+          <PilotCard
             nombre={exp.nombre}
             unidad={exp.placa}
-            id={exp.id} 
+            id={exp.id}
             ultimaDispensa={exp.ultimaDispensa}
-            diasRestantes={exp.diasRestantes}
+            fechaSiguienteDispensa={exp.fechaSiguienteDispensa}
             dispensas={exp.dispensas}
-            onDelete-={handleDeleteExpediente}
+            onDelete={handleDeleteExpediente}
           />
         </Grid>
       ))}
