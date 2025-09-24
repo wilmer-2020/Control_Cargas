@@ -135,7 +135,7 @@ export default function TablaHistorial() {
                 <TableCell>
                   <Box display="flex" alignItems="center" gap={1}>
                     <LocalShippingIcon htmlColor="#059669" />
-                    <strong>Cabezal</strong>
+                    <strong>Unidad</strong>
                   </Box>
                 </TableCell>
                 <TableCell>
