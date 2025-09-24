@@ -10,6 +10,8 @@ import {
 import { getData } from "../utils/storage";
 import { useState, useEffect } from "react";
 import { v4 as uuid } from "uuid";
+import { FaTruckMedical } from "react-icons/fa6";
+import { FaTruckFast } from "react-icons/fa6";
 
 export default function FormularioMovimiento() {
   const [Pilotos, setPilotos] = useState([]);
@@ -74,17 +76,19 @@ export default function FormularioMovimiento() {
       sx={{
         borderRadius: 3,
         p: 2,
-        bgcolor: "#f9fbfd",
+        bgcolor: "#ffffffff",
         boxShadow: 1,
         maxWidth: 400,
-        width: "20%",
+        width: "25%",
       }}
     >
       <CardContent>
-        {/* Título */}
-        <Typography variant="h6" fontWeight="bold" color="#059669" gutterBottom>
-          Registrar Movimiento
+       <Box display="flex" alignItems="center" gap={1} mb={1}>
+        <FaTruckFast color="#059669" size={'22px'}/>
+        <Typography variant="h5" fontWeight="bold" color="#059669">
+          Registro Movimientos
         </Typography>
+       </Box>
         <Typography variant="body2" color="text.secondary" mb={2}>
           Registre un nuevo movimiento para un piloto
         </Typography>
@@ -143,6 +147,7 @@ export default function FormularioMovimiento() {
             fullWidth
             variant="contained"
             onClick={handlesubmit}
+            startIcon={<FaTruckMedical/>}
             sx={{
               bgcolor: "#059669",
               "&:hover": { bgcolor: "#047857" },

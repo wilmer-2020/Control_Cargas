@@ -5,6 +5,7 @@ import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { getData,saveData } from '../utils/storage';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const CardContainer = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -37,17 +38,23 @@ const PilotCard = ({ nombre, id, ultimaDispensa, fechaSiguienteDispensa, unidad,
 
   const { value: formValues } = await Swal.fire({
     title: 'Registrar dispensa',
-    html: `
+   html: `
+    <div style="font-family: sans-serif;">
       <input id="cantidad" type="number" min="1" placeholder="Cantidad en galones" class="swal2-input" />
-      <label style="display:flex;align-items:center;gap:8px;justify-content:center;">
+      <label style="display:flex; align-items:center; gap:8px; justify-content:center;">
         <input id="turnoDoble" type="checkbox" /> Turno doble
       </label>
       <textarea id="nota" class="swal2-textarea" placeholder="Agregar nota (opcional)"></textarea>
-    `,
+    </div>
+  `,
+
     focusConfirm: false,
     showCancelButton: true,
     confirmButtonText: 'Guardar',
     cancelButtonText: 'Cancelar',
+    customClass: {
+    title: 'swal-title', // aplicamos una clase al título
+  },
     preConfirm: () => {
       const cantidad = document.getElementById('cantidad').value;
       const turnoDoble = document.getElementById('turnoDoble').checked;
@@ -63,7 +70,7 @@ const PilotCard = ({ nombre, id, ultimaDispensa, fechaSiguienteDispensa, unidad,
   });
 
   const { cantidad, turnoDoble, nota } = formValues;
-  
+
     if (!cantidad) return; // Cancelado o inválido
 
     const nuevaFechaSiguiente = new Date();
@@ -118,7 +125,7 @@ const PilotCard = ({ nombre, id, ultimaDispensa, fechaSiguienteDispensa, unidad,
         <Box sx={{
           bgcolor: estado === "Dispensado" ? '#D4EDDA' : '#F8D7DA',
           color: estado === "Dispensado" ? '#28A745' : '#C82333',
-          px: 2, py: 0.5, borderRadius: 20, fontWeight: 'bold', fontSize: '0.875rem'
+          px: 2, py: 0.5, borderRadius: 20, fontWeight: 'bold', fontSize: '0.875rem',fontFamily:'sans-serif'
         }}>
           {estado}
         </Box>
@@ -144,6 +151,7 @@ const PilotCard = ({ nombre, id, ultimaDispensa, fechaSiguienteDispensa, unidad,
         variant='contained'
         color='error'
         fullWidth
+        startIcon={<DeleteIcon/>}
         sx={{ mt: 2, borderRadius: "10px" }}
         onClick={handleDelete}
       >

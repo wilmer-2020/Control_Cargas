@@ -10,7 +10,7 @@ import {
 import PersonIcon from "@mui/icons-material/Person";
 
 const getChipColor = (estado) => {
-  return estado ? "success" : "error"; // Verde si activo, rojo si inactivo
+  return estado ? "#059668d3" : "#c80000ff"; // Verde si activo, rojo si inactivo
 };
 
 export default function MovimientosPorPiloto() {
@@ -63,9 +63,9 @@ export default function MovimientosPorPiloto() {
       sx={{
         borderRadius: 3,
         p: 2,
-        bgcolor: "#f9fbfd",
+        bgcolor: "#ffffffff",
         boxShadow: 1,
-        width: "80%",
+        width: "75%",
       }}
     >
       <CardContent>
@@ -115,15 +115,14 @@ export default function MovimientosPorPiloto() {
                 <Grid item>
                   <Chip
                     label={p.estado ? "Activo" : "Inactivo"}
-                    color={getChipColor(p.estado)}
                     size="small"
-                    sx={{ fontWeight: "bold", color: "#fff" }}
+                    sx={{ fontWeight: "bold", color: "#fff",backgroundColor: getChipColor(p.estado) }}
                   />
                 </Grid>
 
                 {/* Totales */}
                 <Grid item>
-                  <Typography variant="h6" fontWeight="bold" textAlign="center">
+                  <Typography variant="h6" fontWeight="bold" textAlign="center" sx={{ color: "#059669" }}>
                     {p.total}
                   </Typography>
                   <Typography
@@ -135,12 +134,13 @@ export default function MovimientosPorPiloto() {
                     Total
                   </Typography>
                 </Grid>
+                
                 <Grid item>
                   <Typography
                     variant="h6"
                     fontWeight="bold"
                     textAlign="center"
-                    sx={{ color: "#059669" }}
+                    sx={{ color: "#010101ff" }}
                   >
                     {p.Circuito}
                   </Typography>
@@ -158,7 +158,7 @@ export default function MovimientosPorPiloto() {
                     variant="h6"
                     fontWeight="bold"
                     textAlign="center"
-                    sx={{ color: "#059669" }}
+                    sx={{ color: "#0088ccff" }}
                   >
                     {p.naviero}
                   </Typography>

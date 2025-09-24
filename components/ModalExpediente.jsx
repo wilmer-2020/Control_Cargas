@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Card, CardContent, TextField, MenuItem } from "@mui/material";
 import { v4 as uuid } from "uuid";
 import { getData, saveData } from "../utils/storage";
+import PostAddIcon from '@mui/icons-material/PostAdd';
 
 const style = {
   position: "absolute",
@@ -70,6 +71,7 @@ const ModalExpediente = () => {
       <Button
         variant="contained"
         sx={{ mb: 2 }}
+        startIcon={<PostAddIcon />}
         onClick={handleOpen}
       >
         CREAR EXPEDIENTE

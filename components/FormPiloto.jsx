@@ -10,6 +10,8 @@ import {
   MenuItem,
   Box,
 } from "@mui/material";
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import { FaAddressCard } from "react-icons/fa";
 
 export default function FormularioPiloto() {
 const [Nombre, setNombre] = useState("")
@@ -42,22 +44,23 @@ const [Placa, setPlaca] = useState("")
       sx={{
         borderRadius: 3,
         p: 2,
-        bgcolor: "#f9fbfd",
+        bgcolor: "#ffffffff",
         boxShadow: 1,
         maxWidth: 400,
         width: '20%',
       }}
     >
       <CardContent>
-        {/* Título */}
+      <Box display="flex" alignItems="center" gap={1}>
+        <FaAddressCard size={"22px"} color="#059669"/>
         <Typography
-          variant="h6"
+          variant="h5"
           fontWeight="bold"
           color="#059669"
-          gutterBottom
         >
-          Registrar Piloto
+          Registro Piloto
         </Typography>
+      </Box>
         <Typography variant="body2" color="text.secondary" mb={2}>
          Complete la información del piloto y su unidad
         </Typography>
@@ -90,6 +93,7 @@ const [Placa, setPlaca] = useState("")
           <Button
             fullWidth
             variant="contained"
+            startIcon={<PersonAddIcon />}
             sx={{
               bgcolor: "#059669",
               "&:hover": { bgcolor: "#047857" },
