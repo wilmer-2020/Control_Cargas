@@ -4,6 +4,7 @@ import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
+import { getData,saveData } from '../utils/storage';
 
 const CardContainer = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -22,7 +23,7 @@ const PilotCard = ({ nombre, id, ultimaDispensa, fechaSiguienteDispensa, unidad,
 
   const formatFecha = (fecha) => fecha ? new Date(fecha).toLocaleString() : "-";
 
-  const handleDispensar = () => {
+  const handleDispensar = async () => {
     const ahora = new Date();
 
     if (siguiente && ahora < new Date(siguiente)) {
@@ -34,17 +35,48 @@ const PilotCard = ({ nombre, id, ultimaDispensa, fechaSiguienteDispensa, unidad,
       return;
     }
 
-    // Calcular fecha siguiente dispensa
-    const nuevaFechaSiguiente = new Date();
-    nuevaFechaSiguiente.setDate(nuevaFechaSiguiente.getDate() + 6);
+  const { value: formValues } = await Swal.fire({
+    title: 'Registrar dispensa',
+    html: `
+      <input id="cantidad" type="number" min="1" placeholder="Cantidad en galones" class="swal2-input" />
+      <label style="display:flex;align-items:center;gap:8px;justify-content:center;">
+        <input id="turnoDoble" type="checkbox" /> Turno doble
+      </label>
+      <textarea id="nota" class="swal2-textarea" placeholder="Agregar nota (opcional)"></textarea>
+    `,
+    focusConfirm: false,
+    showCancelButton: true,
+    confirmButtonText: 'Guardar',
+    cancelButtonText: 'Cancelar',
+    preConfirm: () => {
+      const cantidad = document.getElementById('cantidad').value;
+      const turnoDoble = document.getElementById('turnoDoble').checked;
+      const nota = document.getElementById('nota').value;
 
+      if (!cantidad || cantidad <= 0) {
+        Swal.showValidationMessage('Debe ingresar una cantidad válida');
+        return false;
+      }
+
+      return { cantidad: parseInt(cantidad, 10), turnoDoble, nota };
+    }
+  });
+
+  const { cantidad, turnoDoble, nota } = formValues;
+  
+    if (!cantidad) return; // Cancelado o inválido
+
+    const nuevaFechaSiguiente = new Date();
+    nuevaFechaSiguiente.setDate(nuevaFechaSiguiente.getDate() + (turnoDoble ? 5 : 6));
     // Actualizar storage
-    const expedientes = JSON.parse(localStorage.getItem("expedientes")) || [];
+    const expedientes = getData("expedientes") || [];
     const actualizado = expedientes.map(exp => {
       if (exp.id === id) {
         const nuevaDispensa = {
           fecha: ahora.toISOString(),
           unidad,
+          cantidad: parseInt(cantidad, 10), 
+          nota,
         };
         return {
           ...exp,
@@ -55,17 +87,13 @@ const PilotCard = ({ nombre, id, ultimaDispensa, fechaSiguienteDispensa, unidad,
       }
       return exp;
     });
-    localStorage.setItem("expedientes", JSON.stringify(actualizado));
-
-    // Actualizar estado local
+    saveData("expedientes", actualizado);
     setEstado("Dispensado");
     setSiguiente(nuevaFechaSiguiente.toISOString());
-   
-
     Swal.fire({
       icon: 'success',
       title: 'Dispensado',
-      text: `Próxima dispensa: ${formatFecha(nuevaFechaSiguiente)}`,
+      text: `Se registraron ${cantidad} galones. Próxima dispensa: ${formatFecha(nuevaFechaSiguiente)}`,
     });
   };
 
@@ -111,8 +139,6 @@ const PilotCard = ({ nombre, id, ultimaDispensa, fechaSiguienteDispensa, unidad,
       >
         Dispensar Piloto
       </Button>
-
-
 
       <Button
         variant='contained'

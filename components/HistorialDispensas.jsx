@@ -9,11 +9,13 @@ import {
   Avatar,
   Grid,
   Divider,
-  TextField
+  TextField,
+  InputAdornment
 } from "@mui/material";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PersonIcon from "@mui/icons-material/Person";
+import SearchIcon from '@mui/icons-material/Search';
 
 const HistorialDispensas = () => {
   const [expedientes, setExpedientes] = useState([]);
@@ -60,6 +62,13 @@ const HistorialDispensas = () => {
           size="small"
           sx={{ marginLeft: 2, width: 300 }}
           value={search}
+          InputProps={{
+            startAdornment:(
+              <InputAdornment position="start">
+                <SearchIcon color="action"/>
+              </InputAdornment>
+            )
+          }}
           onChange={(e) => setSearch(e.target.value)} // Actualiza búsqueda
         />
       </Box>
@@ -110,7 +119,7 @@ const HistorialDispensas = () => {
                       <Grid container spacing={2} alignItems="center">
                         <Grid item xs={12} sm={4}>
                           <Typography variant="body2" color="text.secondary">
-                            📅 Date:
+                            📅 Fecha:
                           </Typography>
                           <Typography variant="body1" fontWeight="bold">
                             {formatFecha(d.fecha)}
@@ -119,10 +128,10 @@ const HistorialDispensas = () => {
 
                         <Grid item xs={12} sm={4}>
                           <Typography variant="body2" color="text.secondary">
-                            ⛽ Amount:
+                            ⛽ Cantidad:
                           </Typography>
                           <Typography variant="body1" fontWeight="bold">
-                            {d.cantidad || "—"}
+                          {d.cantidad ? `${d.cantidad} galones` : "—"}
                           </Typography>
                         </Grid>
 
@@ -131,7 +140,7 @@ const HistorialDispensas = () => {
                             📝 Notes:
                           </Typography>
                           <Typography variant="body1">
-                            {d.notas || "Sin notas"}
+                            {d.nota || "Sin notas"}
                           </Typography>
                         </Grid>
                       </Grid>
