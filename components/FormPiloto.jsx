@@ -48,6 +48,7 @@ const [Placa, setPlaca] = useState("")
         boxShadow: 1,
         maxWidth: 400,
         width: '20%',
+        height:"360px"
       }}
     >
       <CardContent>

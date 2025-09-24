@@ -80,6 +80,7 @@ export default function FormularioMovimiento() {
         boxShadow: 1,
         maxWidth: 400,
         width: "25%",
+        height:"400px"
       }}
     >
       <CardContent>
